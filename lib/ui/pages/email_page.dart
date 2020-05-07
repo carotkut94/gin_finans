@@ -265,7 +265,10 @@ class EmailPageState extends State<EmailPage> with SingleTickerProviderStateMixi
     );
   }
 
-  //Utility function for checking if the given mail is valid
+  /// Utility function for checking if the given mail is valid
+  /// regular expression taken from
+  /// https://stackoverflow.com/questions/16800540/validate-email-address-in-dart
+
   bool isEmail(String em) {
     String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regExp = new RegExp(p);
