@@ -7,6 +7,7 @@ class BeginApp extends StatelessWidget{
   Widget build(BuildContext context) {
     // TODO: implement build
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: "ProductSans-Medium"
       ),

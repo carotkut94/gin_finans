@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gin/util/math_util.dart';
+import 'package:gin/util/shake_controller.dart';
 import 'package:gin/util/wave_clipper.dart';
 
 /// Widget for grabbing the email of the on-boarding user.
@@ -12,11 +14,24 @@ class EmailPage extends StatefulWidget {
   EmailPageState createState() => EmailPageState();
 }
 
-class EmailPageState extends State<EmailPage> {
+class EmailPageState extends State<EmailPage> with SingleTickerProviderStateMixin {
+
+  ShakeController _shakeController;
+  TextEditingController emailEditingController;
+  Animation _animation;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    emailEditingController = TextEditingController();
+    _shakeController = ShakeController(vsync: this);
+    _animation = Tween<double>(begin: 50, end: 120).animate(_shakeController);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: Colors.white,
       body:Stack(
         fit: StackFit.expand,
@@ -104,7 +119,7 @@ class EmailPageState extends State<EmailPage> {
                                       child: Center(
                                         child: TextField(
                                           textAlign: TextAlign.start,
-
+                                          controller: emailEditingController,
                                           textAlignVertical: TextAlignVertical.center,
                                           decoration: InputDecoration(
                                               border: InputBorder.none,
@@ -121,26 +136,37 @@ class EmailPageState extends State<EmailPage> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Container(
-                          width: double.infinity,
-                          child: RaisedButton(
-                            color: Color(0xff3f7beb),
+                      AnimatedBuilder(
+                        animation: _shakeController,
+                        builder: (BuildContext context, Widget child) {
+                          return Transform(
+                            transform: Matrix4.translation(shake(_animation.value)),
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                "Next".toUpperCase(),
-                                style: TextStyle(
-                                    color: Colors.white
+                              child: Container(
+                                width: double.infinity,
+                                child: RaisedButton(
+                                  color: Color(0xff3f7beb),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(
+                                      "Next".toUpperCase(),
+                                      style: TextStyle(
+                                          color: Colors.white
+                                      ),
+                                    ),
+                                  ),
+                                  onPressed: (){
+                                    if(emailEditingController.text.isNotEmpty)
+                                      widget.changePage(1);
+                                    else
+                                      _shakeController.shake();
+                                  },
                                 ),
                               ),
                             ),
-                            onPressed: (){
-                              widget.changePage(1);
-                            },
-                          ),
-                        ),
+                          );
+                      },
                       )
                     ],
                   ),),
